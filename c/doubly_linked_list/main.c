@@ -64,7 +64,7 @@ int main() {
     printBackward(list_1);
 
     printf("\nFinal size: %d\n", getSize(list_1));
-    printf("Is empty: %s\n", isEmpty(list_1) ? "Yes" : "No");
+    printf("Is empty: %s\n\n", isEmpty(list_1) ? "Yes" : "No");
 
     // Free memory
     freeList(list_1);

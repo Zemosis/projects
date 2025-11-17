@@ -264,7 +264,7 @@ void test_mixed_operations() {
 
 int main() {
     printf("========================================\n");
-    printf("  Dounly Linked List Test\n");
+    printf("  Doubly Linked List Test\n");
     printf("========================================\n");
 
     test_create_list();
@@ -280,7 +280,7 @@ int main() {
     test_mixed_operations();
 
     printf("\n========================================\n");
-    printf("  TEST RESULTS\n");
+    printf("  Test Results\n");
     printf("========================================\n");
     printf("Passed: %d\n", tests_passed);
     printf("Failed: %d\n", tests_failed);
