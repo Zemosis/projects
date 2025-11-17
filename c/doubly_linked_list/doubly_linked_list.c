@@ -1,4 +1,3 @@
-#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -228,6 +227,8 @@ int main() {
 
         option = 0;
     }
+
+    freeList(list_2);
 
     printf("Exiting the program.\n");
 
