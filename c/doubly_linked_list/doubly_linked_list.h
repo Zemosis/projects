@@ -23,9 +23,11 @@ void insertAt(DoublyLinkedList *list, int data, int index);
 int deleteAtHead(DoublyLinkedList *list);
 int deleteAtTail(DoublyLinkedList *list);
 int deleteAt(DoublyLinkedList *list, int index);
-bool search(DoublyLinkedList *list, int data);
+int search(DoublyLinkedList *list, int data);
+void printForward(DoublyLinkedList *list);
+void printBackward(DoublyLinkedList *list);
 void freeList(DoublyLinkedList *list);
 int getSize(DoublyLinkedList *list);
-bool isEmpty(DoublyLinkedList *list);
+int isEmpty(DoublyLinkedList *list);
 
 #endif
