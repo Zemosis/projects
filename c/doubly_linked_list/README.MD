@@ -8,7 +8,7 @@ A complete implementation of a doubly linked list data structure with comprehens
 - **Dynamic memory management** with proper allocation and deallocation
 - **Comprehensive operations** for insertion, deletion, and searching
 - **Interactive CLI** for hands-on exploration
-- **Full test suite** with 50+ test cases
+- **Full test suite** with 73 test cases
 
 ## Operations Supported
 
