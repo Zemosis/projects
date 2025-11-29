@@ -27,6 +27,8 @@ void ascii_print_image(const Image *img, int scale_factor) {
         return;
     }
 
+    int char_aspect_ratio = 2;
+
     int scaled_width = img->width / scale_factor;
     int scaled_height = img->height / scale_factor;
 
@@ -37,27 +39,46 @@ void ascii_print_image(const Image *img, int scale_factor) {
     // Process image row by row
     for (int y = 0; y < scaled_height; y++) {
         for (int x = 0; x < scaled_width; x++) {
-            // Sample the pixel at the scaled position
-            int src_x = x * scale_factor;
-            int src_y = y * scale_factor;
+            // Average multiple pixels in the block for better quality
+            int total_r = 0, total_g = 0, total_b = 0;
+            int sample_count = 0;
 
-            // Calculate pixel index in the data array
-            int pixel_index = (src_y * img->width + src_x) * img->channels;
+            // Sample a block of pixels (scale_factor x scale_factor*2)
+            for (int dy = 0; dy < scale_factor * char_aspect_ratio; dy++) {
+                for (int dx = 0; dx < scale_factor; dx++) {
+                    int src_x = x * scale_factor + dx;
+                    int src_y = y * scale_factor * char_aspect_ratio + dy;
 
-            // Get RGB values
-            uint8_t r = img->data[pixel_index + 0];
-            uint8_t g = img->data[pixel_index + 1];
-            uint8_t b = img->data[pixel_index + 2];
+                    // Bounds check
+                    if (src_x < img->width && src_y < img->height) {
+                        int pixel_index =
+                            (src_y * img->width + src_x) * img->channels;
 
-            // Convert to grayscale
-            uint8_t gray = image_rgb_to_gray(r, g, b);
+                        total_r += img->data[pixel_index + 0];
+                        total_g += img->data[pixel_index + 1];
+                        total_b += img->data[pixel_index + 2];
+                        sample_count++;
+                    }
+                }
+            }
 
-            // Map to ASCII character
-            char ascii = ascii_from_brightness(gray);
+            // Calculate average RGB values
+            if (sample_count > 0) {
+                uint8_t avg_r = total_r / sample_count;
+                uint8_t avg_g = total_g / sample_count;
+                uint8_t avg_b = total_b / sample_count;
 
-            // Print character (print twice for better aspect ratio)
-            // ASCII characters are taller than they are wide
-            printf("%c%c", ascii, ascii);
+                // Convert to grayscale
+                uint8_t gray = image_rgb_to_gray(avg_r, avg_g, avg_b);
+
+                // Map to ASCII character
+                char ascii = ascii_from_brightness(gray);
+
+                // Print character once (no doubling needed now)
+                printf("%c", ascii);
+            } else {
+                printf(" ");
+            }
         }
         printf("\n");
     }
