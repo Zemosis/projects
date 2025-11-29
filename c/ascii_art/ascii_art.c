@@ -2,6 +2,7 @@
 #include "image.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define VERSION "0.1.0"
 
@@ -18,6 +19,7 @@ int main(int argc, char *argv[]) {
         printf("  %s image.jpg          # Print with default scale (4)\n",
                argv[0]);
         printf("  %s image.jpg 8        # Print with scale 8\n", argv[0]);
+        printf("  %s image.jpg 8 --no-color # Print without color\n", argv[0]);
         printf("  %s image.jpg 4 out.txt  # Save to file with scale 4\n",
                argv[0]);
         printf("         higher values = smaller output\n");
@@ -26,7 +28,7 @@ int main(int argc, char *argv[]) {
 
     // Parse optional scale factor
     int scale_factor = 4; // Default scale
-    if (argc >= 3) {
+    if (argc >= 3 && strcmp(argv[2], "--no-color") != 0) {
         scale_factor = atoi(argv[2]);
         if (scale_factor < 1) {
             fprintf(stderr, "Error: scale must be >= 1\n");
@@ -36,8 +38,14 @@ int main(int argc, char *argv[]) {
 
     // Check for output file
     const char *output_file = NULL;
-    if (argc >= 4) {
-        output_file = argv[3];
+    int use_color = 1;
+
+    for (int i = 3; i < argc; i++) {
+        if (strcmp(argv[i], "--no-color") == 0) {
+            use_color = 0;
+        } else if (!output_file) {
+            output_file = argv[i];
+        }
     }
 
     printf("Loading image: %s\n", argv[1]);
@@ -66,7 +74,10 @@ int main(int argc, char *argv[]) {
         }
     } else {
         // Print to console
-        ascii_print_image(img, scale_factor);
+        if (use_color) {
+            printf("Color mode: enabled (use --no-color to disable)\n");
+        }
+        ascii_print_image(img, scale_factor, use_color);
     }
 
     image_free(img);

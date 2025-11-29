@@ -23,7 +23,8 @@ char ascii_from_brightness(uint8_t brightness) {
     return ASCII_PALETTE[index];
 }
 
-static void ascii_generate(const Image *img, int scale_factor, FILE *output) {
+static void ascii_generate(const Image *img, int scale_factor, FILE *output,
+                           int use_color) {
     if (!img || !img->data || scale_factor < 1) {
         fprintf(stderr, "Invalid image or scale factor\n");
         return;
@@ -72,16 +73,30 @@ static void ascii_generate(const Image *img, int scale_factor, FILE *output) {
                 // Map to ASCII character
                 char ascii = ascii_from_brightness(gray);
 
-                fprintf(output, "%c", ascii);
+                if (use_color) {
+                    fprintf(output, "\033[38;2;%d;%d;%dm%c", avg_r, avg_g,
+                            avg_b, ascii);
+                } else {
+
+                    fprintf(output, "%c", ascii);
+                }
             } else {
                 fprintf(output, " ");
             }
         }
+
+        if (use_color) {
+            fprintf(output, "\033[0m");
+        }
         fprintf(output, "\n");
+    }
+
+    if (use_color) {
+        fprintf(output, "\033[0m");
     }
 }
 
-void ascii_print_image(const Image *img, int scale_factor) {
+void ascii_print_image(const Image *img, int scale_factor, int use_color) {
     if (!img || !img->data || scale_factor < 1) {
         fprintf(stderr, "Invalid image or scale factor\n");
         return;
@@ -90,11 +105,11 @@ void ascii_print_image(const Image *img, int scale_factor) {
     int scaled_width = img->width / scale_factor;
     int scaled_height = img->height / (scale_factor * 2);
 
-    printf("\nASCII Art (%dx%d, scale: %d):\n", scaled_width, scaled_height,
-           scale_factor);
+    printf("\nASCII Art (%dx%d, scale: %d%s):\n", scaled_width, scaled_height,
+           scale_factor, use_color ? ", colored" : "");
     printf("---\n");
 
-    ascii_generate(img, scale_factor, stdout);
+    ascii_generate(img, scale_factor, stdout, use_color);
 
     printf("---\n");
 }
@@ -113,7 +128,7 @@ int ascii_write_to_file(const Image *img, int scale_factor,
         return -1;
     }
 
-    ascii_generate(img, scale_factor, file);
+    ascii_generate(img, scale_factor, file, 0);
 
     fclose(file);
     return 0;

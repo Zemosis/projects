@@ -13,7 +13,7 @@ extern const int ASCII_PALETTE_SIZE;
 char ascii_from_brightness(uint8_t brightness);
 
 // Convert an image to ASCII art and print to stdout
-void ascii_print_image(const Image *img, int scale_factor);
+void ascii_print_image(const Image *img, int scale_factor, int use_color);
 
 // Convert an image to ASCII art and write to file
 int ascii_write_to_file(const Image *img, int scale_factor,
