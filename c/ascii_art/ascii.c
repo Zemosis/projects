@@ -30,7 +30,7 @@ void ascii_print_image(const Image *img, int scale_factor) {
     int char_aspect_ratio = 2;
 
     int scaled_width = img->width / scale_factor;
-    int scaled_height = img->height / scale_factor;
+    int scaled_height = img->height / (scale_factor * char_aspect_ratio);
 
     printf("\nASCII Art (%dx%d, scale: %d):\n", scaled_width, scaled_height,
            scale_factor);
