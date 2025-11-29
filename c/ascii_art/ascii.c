@@ -13,15 +13,17 @@ char ascii_from_brightness(uint8_t brightness) {
     int index = (brightness * ASCII_PALETTE_SIZE) / 256;
 
     // Clamp to valid range
-    if (index < 0)
+    if (index < 0) {
         index = 0;
-    if (index >= ASCII_PALETTE_SIZE)
+    }
+    if (index >= ASCII_PALETTE_SIZE) {
         index = ASCII_PALETTE_SIZE - 1;
+    }
 
     return ASCII_PALETTE[index];
 }
 
-void ascii_print_image(const Image *img, int scale_factor) {
+static void ascii_generate(const Image *img, int scale_factor, FILE *output) {
     if (!img || !img->data || scale_factor < 1) {
         fprintf(stderr, "Invalid image or scale factor\n");
         return;
@@ -31,10 +33,6 @@ void ascii_print_image(const Image *img, int scale_factor) {
 
     int scaled_width = img->width / scale_factor;
     int scaled_height = img->height / (scale_factor * char_aspect_ratio);
-
-    printf("\nASCII Art (%dx%d, scale: %d):\n", scaled_width, scaled_height,
-           scale_factor);
-    printf("---\n");
 
     // Process image row by row
     for (int y = 0; y < scaled_height; y++) {
@@ -74,13 +72,49 @@ void ascii_print_image(const Image *img, int scale_factor) {
                 // Map to ASCII character
                 char ascii = ascii_from_brightness(gray);
 
-                // Print character once (no doubling needed now)
-                printf("%c", ascii);
+                fprintf(output, "%c", ascii);
             } else {
-                printf(" ");
+                fprintf(output, " ");
             }
         }
-        printf("\n");
+        fprintf(output, "\n");
     }
+}
+
+void ascii_print_image(const Image *img, int scale_factor) {
+    if (!img || !img->data || scale_factor < 1) {
+        fprintf(stderr, "Invalid image or scale factor\n");
+        return;
+    }
+
+    int scaled_width = img->width / scale_factor;
+    int scaled_height = img->height / (scale_factor * 2);
+
+    printf("\nASCII Art (%dx%d, scale: %d):\n", scaled_width, scaled_height,
+           scale_factor);
     printf("---\n");
+
+    ascii_generate(img, scale_factor, stdout);
+
+    printf("---\n");
+}
+
+int ascii_write_to_file(const Image *img, int scale_factor,
+                        const char *filename) {
+    if (!img || !img->data || scale_factor < 1 || !filename) {
+        fprintf(stderr, "Invalid parameters for file output\n");
+        return -1;
+    }
+
+    FILE *file = fopen(filename, "w");
+    if (!file) {
+        fprintf(stderr, "Error: Could not open file '%s' for writing\n",
+                filename);
+        return -1;
+    }
+
+    ascii_generate(img, scale_factor, file);
+
+    fclose(file);
+    return 0;
 }

@@ -2,6 +2,7 @@
 #define ASCII_H
 
 #include "image.h"
+#include "stdio.h"
 #include <stdint.h>
 
 // ASCII palette ordered from darkest (dense) to lightest (sparse)
@@ -13,5 +14,9 @@ char ascii_from_brightness(uint8_t brightness);
 
 // Convert an image to ASCII art and print to stdout
 void ascii_print_image(const Image *img, int scale_factor);
+
+// Convert an image to ASCII art and write to file
+int ascii_write_to_file(const Image *img, int scale_factor,
+                        const char *filename);
 
 #endif // ASCII_H
