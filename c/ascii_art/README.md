@@ -2,6 +2,38 @@
 
 A simple C program that converts images to ASCII art with optional color support.
 
+## Example Output
+
+### Original Image
+![Original](examples/test_1.jpg)
+
+### ASCII Art (Colored, scale: 8)
+![ASCII Art Output](output/example_output_test_1.png)
+
+### ASCII ART (Plain Text, scale: 8)
+
+```
+fft|/r||ff111|\)?}1(1\?n;;:::,,""""",,:::;Ill!i><~
+rft)/t|\fj{()|/)?{1))fYz:,,"""""""",,::::;Il!i>><~
+rtf1/t|/fr{(||t)?1}()u*X,""^""^"""",,,::;Ill!i>><~
+jjf{\f\/rx1|||t1?1}()Jo0\~^^^"^^""",,,:;IIl!i>><<<
+frf{/jtfxr)|||t1]){Y*W*ahd/,^"""""",,,:;Il!ii><><~
+fxf1jfjrnr|((|t1](1#pZCv|vQ1^"""""",::;Il!ii>>>><~
+fnf|nfrxuj|()\/1]|{Lu|[1[+?_"""""",,:;Il!!iii>>>><
+jxt/utxrvf|()//1]|{utj-[?i~i,"""",,:;;ll!!iiiii>><
+ff(\r)rtr/)1{|({[\{cxx{?+>~~!:"",::;IIll!i!iiii>><
+rftfn\rff\({})1{}|)fXuf}--?~++l:,:;Illl!!!!iiii>><
+njrrzfvxcjt/)tt)}fj0qv}+?1}[[[]-<]>-[|tfffjjjrrrrr
+vnuvJXCCLUXzrnxuOddkkbLnrf/)1{}}})~:,^<\cccccccvcc
+LCLLLzUYXnnxx\}{rCCJzu[-ttt\(1}}}1l,"^^^iuUUUUUUJJ
+|(|||(|(|)\cf[-fzXYzvn(}frt{]-){)<I><l:::luYYYYYYY
+---_+__+++tc(]1YZpQYc/{)nc)]_]f/]I!{\[<!ll+____-_[
+UUzXJXzvzuXc1-UqwhwY|Xr|xzx\}\ft+>)QJx)]+>|UXLYUrY
+0LXJCCOCQCUf[-j%dZJx[jjfUCLUuvux11ddn1-+~<~cO0ZQOm
+qpQOqwwmmOCjtxULCCmkkYXzuJQYxvux1]ahY\[-___?OdpqOq
+qppwwmwmm0LXcnrnCXdMaULJJCJz|\zx){*%wYt{][]?vZmZZm
+```
+
 ## Features
 
 - Load images in various formats (JPEG, PNG, BMP, GIF, etc.) using `stb_image`
@@ -14,17 +46,28 @@ A simple C program that converts images to ASCII art with optional color support
 ## Project Structure
 ```
 c/
-├── ascii_art          # Compiled executable
-├── ascii.c            # ASCII conversion and output functions
-├── ascii.h            # ASCII module header
-├── image.c            # Image loading and processing
-├── image.h            # Image structure and functions
-├── main.c             # Main program entry point
-├── Makefile           # Build configuration
-├── stb_image.h        # Single-header image loading library
-└── README.md          # This file
+├── include/                # Header files
+│   ├── ascii.h             # ASCII conversion functions
+│   └── image.h             # Image structure and loading
+├── src/                    # Source files
+│   ├── ascii.c             # ASCII conversion implementation
+│   ├── image.c             # Image loading and processing
+│   └── main.c              # Main program entry point
+├── lib/                    # External libraries
+│   └── stb_image.h         # Single-header image loading library
+├── examples/               # Example images for testing
+│   ├── test_1.jpg
+│   ├── test_2.jpg
+│   └── test_3.jpg
+├── output/                 # Sample outputs
+│   └── example_output_test_1.png
+├── build/                  # Build artifacts (*.o files)
+├── ascii_art               # Compiled executable
+├── Makefile                # Build configuration
+├── README.md               # This file
+├── .gitignore              # Git ignore rules
+└── .gitattributes          # Git language recognition tools
 ```
-
 ## Building
 
 ### Prerequisites
@@ -53,16 +96,16 @@ make clean
 ### Basic Usage
 ```bash
 # Display image with default settings (scale: 4, colored)
-./ascii_art image.jpg
+./ascii_art examples/test_2.jpg
 
 # Specify custom scale factor (higher = smaller output)
-./ascii_art image.jpg 8
+./ascii_art examples/test_2.jpg 8
 
 # Disable color output
-./ascii_art image.jpg 8 --no-color
+./ascii_art examples/test_2.jpg 8 --no-color
 
 # Save to file (automatically disables color)
-./ascii_art image.jpg 4 output.txt
+./ascii_art examples/test_2.jpg 4 output/result.txt
 ```
 
 ### Command-Line Arguments
@@ -76,24 +119,6 @@ Arguments:
                   Recommended range: 2-16
   output-file   : Save to file instead of printing (optional)
   --no-color    : Disable ANSI color codes (optional)
-```
-
-### Examples
-```bash
-# View a photo with good detail
-./ascii_art photo.jpg 4
-
-# Quick preview of a large image
-./ascii_art large_image.png 16
-
-# Generate plain text ASCII art
-./ascii_art image.jpg 8 --no-color
-
-# Save to file for sharing
-./ascii_art portrait.jpg 6 portrait_ascii.txt
-
-# View without color (for unsupported terminals)
-./ascii_art image.jpg 8 --no-color
 ```
 
 ## How It Works
