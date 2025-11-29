@@ -5,7 +5,7 @@ RELEASE_FLAGS = -O2
 TARGET = ascii_art
 
 # Source files
-SRCS = ascii_art.c
+SRCS = ascii_art.c image.c
 OBJS = $(SRCS:.c=.o)
 
 # Default target: debug build

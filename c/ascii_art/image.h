@@ -22,4 +22,7 @@ Image *image_create(int width, int height, int channels);
  */
 void image_free(Image *img);
 
+// Load an image from file
+Image *image_load(const char *filename);
+
 #endif // IMAGE_H
