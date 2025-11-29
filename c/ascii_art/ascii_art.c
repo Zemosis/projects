@@ -22,6 +22,15 @@ int main(int argc, char *argv[]) {
     printf("Successfully loaded: %dx%d (%d channels)\n", img->width,
            img->height, img->channels);
 
+    // Test grayscale conversion on a few pixels
+    printf("\nTesting grayscale conversion on first 3 pixels:\n");
+    for (int i = 0; i < 3 && i < img->width * img->height; i++) {
+        uint8_t r = img->data[i * 3 + 0];
+        uint8_t g = img->data[i * 3 + 1];
+        uint8_t b = img->data[i * 3 + 2];
+        uint8_t gray = image_rgb_to_gray(r, g, b);
+        printf("  Pixel %d: RGB(%3d,%3d,%3d) -> Gray(%3d)\n", i, r, g, b, gray);
+    }
     image_free(img);
     return 0;
 }

@@ -58,3 +58,10 @@ Image *image_load(const char *filename) {
     stbi_image_free(data);
     return img;
 }
+
+uint8_t image_rgb_to_gray(uint8_t r, uint8_t g, uint8_t b) {
+    // Use luminosity method (weighted average)
+    // Standard weights: R: 0.299, G: 0.587, B: 0.114
+    int gray = (299 * r + 587 * g + 114 * b) / 1000;
+    return (uint8_t)gray;
+}
