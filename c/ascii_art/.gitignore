@@ -1,0 +1,22 @@
+# Build artifacts
+*.o
+ascii_art
+build/*.o
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Output files (optional - remove if you want to track them)
+output/*.txt
+!output/.gitkeep
+
+# Keep directory structure
+!build/.gitkeep

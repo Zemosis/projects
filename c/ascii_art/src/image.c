@@ -1,9 +1,9 @@
-#include "image.h"
+#include "../include/image.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include "../lib/stb_image.h"
 
 Image *image_create(int width, int height, int channels) {
     Image *img = (Image *)malloc(sizeof(Image));

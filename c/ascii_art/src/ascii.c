@@ -1,4 +1,4 @@
-#include "ascii.h"
+#include "../include/ascii.h"
 #include <stdio.h>
 
 // ASCII palette ordered from darkest (dense) to lightest (sparse)
