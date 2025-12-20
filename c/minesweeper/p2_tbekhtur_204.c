@@ -2,6 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+typedef struct GameState {
+        int rows;
+        int cols;
+        int num_bombs;
+        char **game_board;
+        char **play_board;
+} GameState;
+
 // Prototype
 int commandline_check(int argc, char **argv);
 int get_bomb_percent(char *level);
@@ -15,38 +23,42 @@ void walker(char **pboard, char **gboard, int rows, int cols, int click_r,
             int click_c);
 void play(char **pboard, char **gboard, int rows, int cols, int num_bomb);
 void cleanup(char **board, int rows);
+int parse_int(const char *str);
 
 int main(int argc, char *argv[]) {
     if (!commandline_check(argc, argv)) {
         return 1;
     }
 
-    int row = atoi(argv[1]);
-    int col = atoi(argv[2]);
+    GameState game;
+
+    game.rows = atoi(argv[1]);
+    game.cols = atoi(argv[2]);
+
     char difficulty[10];
     srand(atoi(argv[4]));
-
     strcpy(difficulty, argv[3]);
 
     // Bomb num initialize
     int bomb_percent = get_bomb_percent(difficulty);
-    int bomb_total = get_num_bomb(row, col, bomb_percent);
+    game.num_bombs = get_num_bomb(game.rows, game.cols, bomb_percent);
 
     // Two array initialize
-    char **game_board = setup(row, col);
-    char **play_board = setup(row, col);
+    game.game_board = setup(game.rows, game.cols);
+    game.play_board = setup(game.rows, game.cols);
 
-    init(game_board, row, col, bomb_total);
+    init(game.game_board, game.rows, game.cols, game.num_bombs);
 
     printf("This is the game board after initialization\n");
-    print_board(game_board, row, col);
+    print_board(game.game_board, game.rows, game.cols);
     printf("\nThis is the play board after setup\n");
-    print_board(play_board, row, col);
+    print_board(game.play_board, game.rows, game.cols);
 
     printf("\nThe game will start\n");
-    play(play_board, game_board, row, col, bomb_total);
-    cleanup(play_board, row);
-    cleanup(game_board, row);
+    play(game.play_board, game.game_board, game.rows, game.cols,
+         game.num_bombs);
+    cleanup(game.play_board, game.rows);
+    cleanup(game.game_board, game.rows);
 }
 
 int commandline_check(int argc, char **argv) {
@@ -56,13 +68,13 @@ int commandline_check(int argc, char **argv) {
         return 0;
     }
 
-    int rows = atoi(argv[1]);
+    int rows = parse_int(argv[1]);
     if (rows <= 0) {
         printf("Error: Invalid rows. Must be positive integer\n");
         return 0;
     }
 
-    int cols = atoi(argv[2]);
+    int cols = parse_int(argv[2]);
     if (cols <= 0) {
         printf("Error: Invalid columns. Must be positive integer\n");
         return 0;
@@ -239,4 +251,15 @@ void cleanup(char **board, int rows) {
         free(board[i]);
     }
     free(board);
+}
+
+int parse_int(const char *str) {
+    char *endptr;
+    int val = strtol(str, &endptr, 10);
+
+    if (str == endptr || *endptr != '\0') {
+        return -1;
+    }
+
+    return val;
 }
