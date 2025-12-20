@@ -15,13 +15,13 @@ int commandline_check(int argc, char **argv);
 int get_bomb_percent(char *level);
 int get_num_bomb(int rows, int cols, int bomb_percent);
 char **setup(int rows, int cols);
-void init(char **gboard, int rows, int cols, int num_bomb);
+void init(GameState *game);
 int get_adjacent_bombs(char **gboard, int rows, int cols, int current_row,
                        int current_col);
 void print_board(char **board, int rows, int cols);
 void walker(char **pboard, char **gboard, int rows, int cols, int click_r,
             int click_c);
-void play(char **pboard, char **gboard, int rows, int cols, int num_bomb);
+void play(GameState *game);
 void cleanup(char **board, int rows);
 int parse_int(const char *str);
 
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
     game.game_board = setup(game.rows, game.cols);
     game.play_board = setup(game.rows, game.cols);
 
-    init(game.game_board, game.rows, game.cols, game.num_bombs);
+    init(&game);
 
     printf("This is the game board after initialization\n");
     print_board(game.game_board, game.rows, game.cols);
@@ -55,8 +55,7 @@ int main(int argc, char *argv[]) {
     print_board(game.play_board, game.rows, game.cols);
 
     printf("\nThe game will start\n");
-    play(game.play_board, game.game_board, game.rows, game.cols,
-         game.num_bombs);
+    play(&game);
     cleanup(game.play_board, game.rows);
     cleanup(game.game_board, game.rows);
 }
@@ -119,24 +118,25 @@ char **setup(int rows, int cols) {
     return board;
 }
 
-void init(char **gboard, int rows, int cols, int num_bomb) {
+void init(GameState *game) {
     int bomb_placed = 0;
 
-    while (bomb_placed < num_bomb) {
-        int rand_row = rand() % rows;
-        int rand_col = rand() % cols;
+    while (bomb_placed < game->num_bombs) {
+        int rand_row = rand() % game->rows;
+        int rand_col = rand() % game->cols;
 
-        if (gboard[rand_row][rand_col] != '*') {
-            gboard[rand_row][rand_col] = '*';
+        if (game->game_board[rand_row][rand_col] != '*') {
+            game->game_board[rand_row][rand_col] = '*';
             bomb_placed++;
         }
     }
 
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            if (gboard[i][j] != '*') {
-                int count = get_adjacent_bombs(gboard, rows, cols, i, j);
-                gboard[i][j] = '0' + count;
+    for (int i = 0; i < game->rows; i++) {
+        for (int j = 0; j < game->cols; j++) {
+            if (game->game_board[i][j] != '*') {
+                int count = get_adjacent_bombs(game->game_board, game->rows,
+                                               game->cols, i, j);
+                game->game_board[i][j] = '0' + count;
             }
         }
     }
@@ -207,32 +207,33 @@ void walker(char **pboard, char **gboard, int rows, int cols, int click_r,
     }
 }
 
-void play(char **pboard, char **gboard, int rows, int cols, int num_bomb) {
-    int total_tiles = rows * cols;
-    int tiles_to_reveal = total_tiles - num_bomb;
+void play(GameState *game) {
+    int total_tiles = game->rows * game->cols;
+    int tiles_to_reveal = total_tiles - game->num_bombs;
 
     while (1) {
-        int rand_row = rand() % rows;
-        int rand_col = rand() % cols;
+        int rand_row = rand() % game->rows;
+        int rand_col = rand() % game->cols;
 
-        if (gboard[rand_row][rand_col] == '*') {
+        if (game->game_board[rand_row][rand_col] == '*') {
             printf("Click at (%d, %d). Bomb Exploded! Game Over!\n", rand_row,
                    rand_col);
-            pboard[rand_row][rand_col] = '!';
+            game->play_board[rand_row][rand_col] = '!';
             printf("This is the play board after explosion\n");
-            print_board(pboard, rows, cols);
+            print_board(game->play_board, game->rows, game->cols);
             return;
-        } else if (pboard[rand_row][rand_col] == '.') {
+        } else if (game->play_board[rand_row][rand_col] == '.') {
             printf("Click at (%d, %d)\n", rand_row, rand_col);
-            walker(pboard, gboard, rows, cols, rand_row, rand_col);
-            print_board(pboard, rows, cols);
+            walker(game->play_board, game->game_board, game->rows, game->cols,
+                   rand_row, rand_col);
+            print_board(game->play_board, game->rows, game->cols);
             printf("\n");
         }
 
         int revealed = 0;
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                if (pboard[i][j] != '.') {
+        for (int i = 0; i < game->rows; i++) {
+            for (int j = 0; j < game->cols; j++) {
+                if (game->play_board[i][j] != '.') {
                     revealed++;
                 }
             }
@@ -240,7 +241,7 @@ void play(char **pboard, char **gboard, int rows, int cols, int num_bomb) {
 
         if (revealed >= tiles_to_reveal) {
             printf("Game Completed!\n");
-            print_board(pboard, rows, cols);
+            print_board(game->play_board, game->rows, game->cols);
             return;
         }
     }
