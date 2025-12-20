@@ -45,9 +45,21 @@ int main(int argc, char *argv[]) {
 
     // Two array initialize
     game.game_board = setup(game.rows, game.cols);
+
+    if (game.game_board == NULL) {
+        printf("Error: Memory allocation failed for game board\n");
+        return 1;
+    }
+
     game.play_board = setup(game.rows, game.cols);
 
     init(&game);
+
+    if (game.play_board == NULL) {
+        printf("Error: Memory allocation failed for play board\n");
+        cleanup(game.game_board, game.rows);
+        return 1;
+    }
 
     printf("This is the game board after initialization\n");
     print_board(game.game_board, game.rows, game.cols);
@@ -58,6 +70,8 @@ int main(int argc, char *argv[]) {
     play(&game);
     cleanup(game.play_board, game.rows);
     cleanup(game.game_board, game.rows);
+
+    return 0;
 }
 
 int commandline_check(int argc, char **argv) {
@@ -105,8 +119,20 @@ int get_num_bomb(int rows, int cols, int bomb_percent) {
 
 char **setup(int rows, int cols) {
     char **board = malloc(rows * sizeof(char *));
+    if (board == NULL) {
+        return NULL;
+    }
+
     for (int i = 0; i < rows; i++) {
         board[i] = malloc(cols * sizeof(char));
+        if (board[i] == NULL) {
+            // Clean up previously allocated rows
+            for (int j = 0; j < i; j++) {
+                free(board[j]);
+            }
+            free(board);
+            return NULL;
+        }
     }
 
     for (int i = 0; i < rows; i++) {
@@ -248,6 +274,9 @@ void play(GameState *game) {
 }
 
 void cleanup(char **board, int rows) {
+    if (board == NULL) {
+        return;
+    }
     for (int i = 0; i < rows; i++) {
         free(board[i]);
     }
