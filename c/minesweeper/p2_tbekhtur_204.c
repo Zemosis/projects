@@ -236,25 +236,45 @@ void walker(char **pboard, char **gboard, int rows, int cols, int click_r,
 void play(GameState *game) {
     int total_tiles = game->rows * game->cols;
     int tiles_to_reveal = total_tiles - game->num_bombs;
+    int r, c;
+    char buffer[100];
 
     while (1) {
-        int rand_row = rand() % game->rows;
-        int rand_col = rand() % game->cols;
+        printf("Enter row and column to reveal (e.g. 0 0): ");
 
-        if (game->game_board[rand_row][rand_col] == '*') {
-            printf("Click at (%d, %d). Bomb Exploded! Game Over!\n", rand_row,
-                   rand_col);
-            game->play_board[rand_row][rand_col] = '!';
-            printf("This is the play board after explosion\n");
+        if (fgets(buffer, sizeof(buffer), stdin) == NULL) {
+            printf("\nInput stream ended. Exiting.\n");
+            return;
+        }
+
+        if (sscanf(buffer, " %d %d", &r, &c) != 2) {
+            printf("Invalid input. Please enter two numbers.\n");
+            continue;
+        }
+
+        if (r < 0 || r >= game->rows || c < 0 || c >= game->cols) {
+            printf("Coordinates out of bounds (0-%d, 0-%d). Try again.\n",
+                   game->rows - 1, game->cols - 1);
+            continue;
+        }
+
+        if (game->play_board[r][c] != '.') {
+            printf("Tile already revealed. Pick another.\n");
+            continue;
+        }
+
+        if (game->game_board[r][c] == '*') {
+            printf("Hit mine at (%d, %d)! Game Over!\n", r, c);
+            game->play_board[r][c] = '!';
             print_board(game->play_board, game->rows, game->cols);
             return;
-        } else if (game->play_board[rand_row][rand_col] == '.') {
-            printf("Click at (%d, %d)\n", rand_row, rand_col);
-            walker(game->play_board, game->game_board, game->rows, game->cols,
-                   rand_row, rand_col);
-            print_board(game->play_board, game->rows, game->cols);
-            printf("\n");
         }
+
+        printf("Revealing (%d, %d)\n", r, c);
+        walker(game->play_board, game->game_board, game->rows, game->cols, r,
+               c);
+        print_board(game->play_board, game->rows, game->cols);
+        printf("\n");
 
         int revealed = 0;
         for (int i = 0; i < game->rows; i++) {
@@ -266,7 +286,7 @@ void play(GameState *game) {
         }
 
         if (revealed >= tiles_to_reveal) {
-            printf("Game Completed!\n");
+            printf("Congratulations! You cleared the minefield!\n");
             print_board(game->play_board, game->rows, game->cols);
             return;
         }
