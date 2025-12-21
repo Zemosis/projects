@@ -194,9 +194,22 @@ int get_adjacent_bombs(char **gboard, int rows, int cols, int current_row,
 }
 
 void print_board(char **board, int rows, int cols) {
+    printf("   ");
+    for (int j = 0; j < cols; j++) {
+        printf("%2d ", j);
+    }
+    printf("\n");
+
+    printf("   ");
+    for (int j = 0; j < cols; j++) {
+        printf("---");
+    }
+    printf("\n");
+
     for (int i = 0; i < rows; i++) {
+        printf("%2d|", i);
         for (int j = 0; j < cols; j++) {
-            printf("%c ", board[i][j]);
+            printf(" %c ", board[i][j]);
         }
         printf("\n");
     }
