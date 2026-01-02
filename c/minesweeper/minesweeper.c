@@ -253,21 +253,54 @@ void play(GameState *game) {
     char buffer[100];
 
     while (1) {
-        printf("Enter row and column to reveal (e.g. 0 0): ");
+        printf("Enter command (e.g. '1 2' to reveal or 'f 1 2' to flag): ");
 
         if (fgets(buffer, sizeof(buffer), stdin) == NULL) {
             printf("\nInput stream ended. Exiting.\n");
             return;
         }
 
-        if (sscanf(buffer, " %d %d", &r, &c) != 2) {
-            printf("Invalid input. Please enter two numbers.\n");
-            continue;
+        char action = 'r';
+
+        if (buffer[0] == 'f' || buffer[0] == 'F') {
+            action = 'f';
+            // Flag command parse
+            if (sscanf(buffer + 1, " %d %d", &r, &c) != 2) {
+                printf("Invalid input. Use 'f row col' format.\n");
+                continue;
+            }
+        } else {
+            // Standar reveal command parse
+            if (sscanf(buffer + 1, " %d %d", &r, &c) != 2) {
+                printf("Invalid input. Please enter two numbers.\n");
+                continue;
+            }
         }
 
+        // Bounds Check
         if (r < 0 || r >= game->rows || c < 0 || c >= game->cols) {
             printf("Coordinates out of bounds (0-%d, 0-%d). Try again.\n",
                    game->rows - 1, game->cols - 1);
+            continue;
+        }
+
+        // Logic for Flagging
+        if (action == 'f') {
+            if (game->play_board[r][c] == '.') {
+                game->play_board[r][c] = 'F';
+            } else if (game->play_board[r][c] == 'F') {
+                // Toggle off
+                game->play_board[r][c] = '.';
+            } else {
+                printf("Cannot toggle a revealed tile.\n");
+            }
+            print_board(game->play_board, game->rows, game->cols);
+            continue;
+        }
+
+        // Logic for revealing
+        if (game->play_board[r][c] == 'F') {
+            printf("Tile is flagged! Unflag it first to reveal.\n");
             continue;
         }
 
@@ -292,7 +325,8 @@ void play(GameState *game) {
         int revealed = 0;
         for (int i = 0; i < game->rows; i++) {
             for (int j = 0; j < game->cols; j++) {
-                if (game->play_board[i][j] != '.') {
+                if (game->play_board[i][j] != '.' &&
+                    game->play_board[i][j] != 'F') {
                     revealed++;
                 }
             }
