@@ -271,7 +271,7 @@ void play(GameState *game) {
             }
         } else {
             // Standar reveal command parse
-            if (sscanf(buffer + 1, " %d %d", &r, &c) != 2) {
+            if (sscanf(buffer, " %d %d", &r, &c) != 2) {
                 printf("Invalid input. Please enter two numbers.\n");
                 continue;
             }
