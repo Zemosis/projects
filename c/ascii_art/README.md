@@ -164,62 +164,6 @@ $@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,"^`'.
 Dense/complex characters appear darker, sparse characters appear lighter.
 Because it uses very diverse characters, the images tend to look a bit noisy.
 
-## Technical Details
-
-### Image Structure
-```c
-typedef struct {
-    int width;
-    int height;
-    int channels;  // Always 3 (RGB)
-    uint8_t *data; // Row-major pixel data
-} Image;
-```
-
-### RGB to Grayscale
-```c
-uint8_t gray = (299*r + 587*g + 114*b) / 1000;
-```
-
-### Brightness to ASCII
-```c
-int index = (brightness * PALETTE_SIZE) / 256;
-char ascii = ASCII_PALETTE[index];
-```
-
-### ANSI Color Codes
-```c
-// 24-bit true color
-printf("\033[38;2;%d;%d;%dm%c", r, g, b, character);
-
-// Reset
-printf("\033[0m");
-```
-## Dependencies
-
-- **stb_image.h**: Public domain image loading library
-  - Author: Sean Barrett
-  - License: Public Domain / MIT
-  - No compilation needed (header-only)
-
-## Limitations
-
-- Color output requires true-color terminal support
-- Output size limited by terminal dimensions
-- Memory usage proportional to image size
-- No interactive mode or real-time preview
-
-## Future Improvements
-
-- [ ] Add support for inverted brightness mapping
-- [ ] Allow custom ASCII palettes
-- [ ] Add edge detection for better detail
-- [ ] Support for animated GIFs
-- [ ] HTML output with colored `<pre>` tags
-- [ ] Dithering for better gradients
-- [ ] Interactive terminal UI with live preview
-- [ ] Support for video input (frame-by-frame)
-
 ## License
 
 This project is for educational purposes. The code itself is provided as-is.
@@ -229,14 +173,3 @@ stb_image.h is in the public domain (see file header for details).
 ## Acknowledgments
 
 - Sean Barrett for stb_image
-- The ASCII art community for palette inspiration
-
-## Version History
-
-### v0.1.0 (Initial Release)
-- Basic image loading with stb_image
-- Grayscale conversion
-- ASCII character mapping
-- Color output with ANSI codes
-- File output support
-- Configurable scaling
