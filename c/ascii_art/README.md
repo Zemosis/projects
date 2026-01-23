@@ -5,9 +5,11 @@ A simple C program that converts images to ASCII art with optional color support
 ## Example Output
 
 ### Original Image
+
 ![Original](examples/test_1.jpg)
 
 ### ASCII Art (Colored, scale: 8)
+
 ![ASCII Art Output](output/example_output_test_1.png)
 
 ### ASCII ART (Plain Text, scale: 8)
@@ -44,6 +46,7 @@ qppwwmwmm0LXcnrnCXdMaULJJCJz|\zx){*%wYt{][]?vZmZZm
 - Proper aspect ratio handling for terminal display
 
 ## Project Structure
+
 ```
 c/
 ├── include/                # Header files
@@ -68,6 +71,7 @@ c/
 ├── .gitignore              # Git ignore rules
 └── .gitattributes          # Git language recognition tools
 ```
+
 ## Building
 
 ### Prerequisites
@@ -77,6 +81,7 @@ c/
 - A terminal that supports 24-bit color (optional, for color output)
 
 ### Compile
+
 ```bash
 # Debug build (with debug symbols)
 make
@@ -94,6 +99,7 @@ make clean
 ## Usage
 
 ### Basic Usage
+
 ```bash
 # Display image with default settings (scale: 4, colored)
 ./ascii_art examples/test_2.jpg
@@ -109,6 +115,7 @@ make clean
 ```
 
 ### Command-Line Arguments
+
 ```
 ./ascii_art <image-file> [scale] [output-file] [--no-color]
 
@@ -124,32 +131,38 @@ Arguments:
 ## How It Works
 
 ### 1. Image Loading
+
 - Uses `stb_image.h` to load various image formats
 - Converts all images to RGB (3 channels)
 - Stores pixel data in a simple `Image` structure
 
 ### 2. Brightness Calculation
+
 - Converts RGB to grayscale using the luminosity method:
   - `Gray = 0.299*R + 0.587*G + 0.114*B`
 - This weights colors based on human eye sensitivity
 
 ### 3. ASCII Mapping
+
 - Uses a 70-character palette ordered by visual density
 - Darker characters (like `$`, `@`, `#`) for darker areas
 - Lighter characters (like `.`, `,`, ` `) for brighter areas
 - Maps grayscale values (0-255) to palette indices
 
 ### 4. Block Averaging
+
 - Samples multiple pixels per character for better quality
 - Averages RGB values within each block
 - Reduces noise and improves visual clarity
 
 ### 5. Aspect Ratio Correction
+
 - ASCII characters are ~2x taller than wide
 - Samples 2x more vertical pixels to maintain proper proportions
 - Prevents stretched/distorted output
 
 ### 6. Color Output (Optional)
+
 - Uses ANSI 24-bit true color escape codes
 - Format: `\033[38;2;R;G;Bm` for each character
 - Preserves original image colors while using ASCII shapes
@@ -157,6 +170,7 @@ Arguments:
 ## ASCII Palette
 
 The program uses this palette (70 characters, dark to light):
+
 ```
 $@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,"^`'.
 ```
