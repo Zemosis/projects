@@ -2,8 +2,7 @@
 #include <stdio.h>
 
 // ASCII palette ordered from darkest (dense) to lightest (sparse)
-const char ASCII_PALETTE[] =
-    "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. ";
+const char ASCII_PALETTE[] = "@%#*+=:-. ";
 
 const int ASCII_PALETTE_SIZE =
     sizeof(ASCII_PALETTE) - 1; // -1 to exclude null terminator
@@ -23,65 +22,26 @@ char ascii_from_brightness(uint8_t brightness) {
     return ASCII_PALETTE[index];
 }
 
-static void ascii_generate(const Image *img, int scale_factor, FILE *output,
-                           int use_color) {
-    if (!img || !img->data || scale_factor < 1) {
-        fprintf(stderr, "Invalid image or scale factor\n");
+static void ascii_generate(const Image *img, FILE *output, int use_color) {
+    if (!img || !img->data) {
+        fprintf(stderr, "Invalid image\n");
         return;
     }
 
-    int char_aspect_ratio = 2;
+    for (int y = 0; y < img->height; y++) {
+        for (int x = 0; x < img->width; x++) {
+            int idx = (y * img->width + x) * img->channels;
+            uint8_t r = img->data[idx + 0];
+            uint8_t g = img->data[idx + 1];
+            uint8_t b = img->data[idx + 2];
 
-    int scaled_width = img->width / scale_factor;
-    int scaled_height = img->height / (scale_factor * char_aspect_ratio);
+            uint8_t gray = image_rgb_to_gray(r, g, b);
+            char ascii = ascii_from_brightness(gray);
 
-    // Process image row by row
-    for (int y = 0; y < scaled_height; y++) {
-        for (int x = 0; x < scaled_width; x++) {
-            // Average multiple pixels in the block for better quality
-            int total_r = 0, total_g = 0, total_b = 0;
-            int sample_count = 0;
-
-            // Sample a block of pixels (scale_factor x scale_factor*2)
-            for (int dy = 0; dy < scale_factor * char_aspect_ratio; dy++) {
-                for (int dx = 0; dx < scale_factor; dx++) {
-                    int src_x = x * scale_factor + dx;
-                    int src_y = y * scale_factor * char_aspect_ratio + dy;
-
-                    // Bounds check
-                    if (src_x < img->width && src_y < img->height) {
-                        int pixel_index =
-                            (src_y * img->width + src_x) * img->channels;
-
-                        total_r += img->data[pixel_index + 0];
-                        total_g += img->data[pixel_index + 1];
-                        total_b += img->data[pixel_index + 2];
-                        sample_count++;
-                    }
-                }
-            }
-
-            // Calculate average RGB values
-            if (sample_count > 0) {
-                uint8_t avg_r = total_r / sample_count;
-                uint8_t avg_g = total_g / sample_count;
-                uint8_t avg_b = total_b / sample_count;
-
-                // Convert to grayscale
-                uint8_t gray = image_rgb_to_gray(avg_r, avg_g, avg_b);
-
-                // Map to ASCII character
-                char ascii = ascii_from_brightness(gray);
-
-                if (use_color) {
-                    fprintf(output, "\033[38;2;%d;%d;%dm%c", avg_r, avg_g,
-                            avg_b, ascii);
-                } else {
-
-                    fprintf(output, "%c", ascii);
-                }
+            if (use_color) {
+                fprintf(output, "\033[38;2;%d;%d;%dm%c", r, g, b, ascii);
             } else {
-                fprintf(output, " ");
+                fprintf(output, "%c", ascii);
             }
         }
 
@@ -96,27 +56,23 @@ static void ascii_generate(const Image *img, int scale_factor, FILE *output,
     }
 }
 
-void ascii_print_image(const Image *img, int scale_factor, int use_color) {
-    if (!img || !img->data || scale_factor < 1) {
-        fprintf(stderr, "Invalid image or scale factor\n");
+void ascii_print_image(const Image *img, int use_color) {
+    if (!img || !img->data) {
+        fprintf(stderr, "Invalid image\n");
         return;
     }
 
-    int scaled_width = img->width / scale_factor;
-    int scaled_height = img->height / (scale_factor * 2);
-
-    printf("\nASCII Art (%dx%d, scale: %d%s):\n", scaled_width, scaled_height,
-           scale_factor, use_color ? ", colored" : "");
+    printf("\nASCII Art (%dx%d%s):\n", img->width, img->height,
+           use_color ? ", colored" : "");
     printf("---\n");
 
-    ascii_generate(img, scale_factor, stdout, use_color);
+    ascii_generate(img, stdout, use_color);
 
     printf("---\n");
 }
 
-int ascii_write_to_file(const Image *img, int scale_factor,
-                        const char *filename) {
-    if (!img || !img->data || scale_factor < 1 || !filename) {
+int ascii_write_to_file(const Image *img, const char *filename) {
+    if (!img || !img->data || !filename) {
         fprintf(stderr, "Invalid parameters for file output\n");
         return -1;
     }
@@ -128,7 +84,7 @@ int ascii_write_to_file(const Image *img, int scale_factor,
         return -1;
     }
 
-    ascii_generate(img, scale_factor, file, 0);
+    ascii_generate(img, file, 0);
 
     fclose(file);
     return 0;

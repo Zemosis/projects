@@ -6,34 +6,55 @@ A simple C program that converts images to ASCII art with optional color support
 
 ### Original Image
 
-![Original](examples/test_1.jpg)
+![Original](examples/portrait1.jpg)
 
-### ASCII Art (Colored, scale: 8)
+### ASCII Art (Colored, scale: 10)
 
-![ASCII Art Output](output/example_output_test_1.png)
+![ASCII Art Output](output/portrait1_output.png)
 
-### ASCII ART (Plain Text, scale: 8)
+### ASCII ART (Plain Text, width: 50)
 
 ```
-fft|/r||ff111|\)?}1(1\?n;;:::,,""""",,:::;Ill!i><~
-rft)/t|\fj{()|/)?{1))fYz:,,"""""""",,::::;Il!i>><~
-rtf1/t|/fr{(||t)?1}()u*X,""^""^"""",,,::;Ill!i>><~
-jjf{\f\/rx1|||t1?1}()Jo0\~^^^"^^""",,,:;IIl!i>><<<
-frf{/jtfxr)|||t1]){Y*W*ahd/,^"""""",,,:;Il!ii><><~
-fxf1jfjrnr|((|t1](1#pZCv|vQ1^"""""",::;Il!ii>>>><~
-fnf|nfrxuj|()\/1]|{Lu|[1[+?_"""""",,:;Il!!iii>>>><
-jxt/utxrvf|()//1]|{utj-[?i~i,"""",,:;;ll!!iiiii>><
-ff(\r)rtr/)1{|({[\{cxx{?+>~~!:"",::;IIll!i!iiii>><
-rftfn\rff\({})1{}|)fXuf}--?~++l:,:;Illl!!!!iiii>><
-njrrzfvxcjt/)tt)}fj0qv}+?1}[[[]-<]>-[|tfffjjjrrrrr
-vnuvJXCCLUXzrnxuOddkkbLnrf/)1{}}})~:,^<\cccccccvcc
-LCLLLzUYXnnxx\}{rCCJzu[-ttt\(1}}}1l,"^^^iuUUUUUUJJ
-|(|||(|(|)\cf[-fzXYzvn(}frt{]-){)<I><l:::luYYYYYYY
----_+__+++tc(]1YZpQYc/{)nc)]_]f/]I!{\[<!ll+____-_[
-UUzXJXzvzuXc1-UqwhwY|Xr|xzx\}\ft+>)QJx)]+>|UXLYUrY
-0LXJCCOCQCUf[-j%dZJx[jjfUCLUuvux11ddn1-+~<~cO0ZQOm
-qpQOqwwmmOCjtxULCCmkkYXzuJQYxvux1]ahY\[-___?OdpqOq
-qppwwmwmm0LXcnrnCXdMaULJJCJz|\zx){*%wYt{][]?vZmZZm
+---
+************************************************************
+************************************************************
+***************************###*####*************************
+************************#%@@@@@@@@@@%#**********************
+**********************#@@@@@@@@@@@@@@@@#********************
+*********************%@@@@@%@@%@@@@@@@@@%*******************
+******************##%@@@@@%##%+*%@@@@@@@@%******************
+******************##%@@@@%*++=%*+*#%%@@@@@%*****************
+*******************#%@@#*+=:-:==**++*#@##@@#****************
+*******************#%@@#++=:-=:-:=::+##+*@@%****************
+*******************#%@@%::-:-==---:=*#**%@@@%#**************
+*******************#%@@@+:-::==-::=+*#@%@@@%##**************
+********************#%%@@+:=++++::=+*%@@@@@%#***************
+********************##@%#*===:::==+*#%%%###*****************
+***************************+=::=+**++*%%%*******************
+**************************#%+:====:=:=#@@@#*****************
+***********************#%%@%=:----::-:%@@@@%#***************
+****************##%%%@@@@@@%::------+@@@@@@@@%#*************
+**************#@@@@@@@@@@@@*------+%@@@@@@@@@@@@%#**********
+*************#@@@@@@@@@@@@@#-----+@@@@@@@@@@@@@@@@%#********
+*************@@@@@@@@@@@@@@#----*@@@@@@@@@@@@@@@@@@@@%******
+************%@@@@@@@@@@@@@@#..-#@@@@@@@@@@@@@@@@@@@@@@%*****
+***********#@@@@@@@@@@@@@@@%--%@@@@@@@@@@@@@@@@@@@@@@@@*****
+***********@@@@@@@@@@@@@@@@@=%@@@@@@@@@@@@@@@@@@@@@@@@@*****
+**********%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*****
+**********@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*****
+*********#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*****
+*********%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*****
+********#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*****
+********%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*****
+*******%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#*#*#
+*******@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#####
+*******%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%#####
+*******%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@######
+*******@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%######
+******#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@########
+******%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%#########
+******%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@###########
+--- 
 ```
 
 ## Features
@@ -41,21 +62,22 @@ qppwwmwmm0LXcnrnCXdMaULJJCJz|\zx){*%wYt{][]?vZmZZm
 - Load images in various formats (JPEG, PNG, BMP, GIF, etc.) using `stb_image`
 - Convert images to ASCII art using brightness-based character mapping
 - Optional 24-bit true color output using ANSI escape codes
-- Configurable downsampling for different output sizes
+- Auto-fits output to 50% of terminal width by default
+- Manual width or scale override via CLI flags
 - Save ASCII art to text files
 - Proper aspect ratio handling for terminal display
 
 ## Project Structure
 
 ```
-c/
+ascii_art/
 ├── include/                # Header files
 │   ├── ascii.h             # ASCII conversion functions
 │   └── image.h             # Image structure and loading
 ├── src/                    # Source files
 │   ├── ascii.c             # ASCII conversion implementation
 │   ├── image.c             # Image loading and processing
-│   └── main.c              # Main program entry point
+│   └── ascii_art.c         # Main program entry point
 ├── lib/                    # External libraries
 │   └── stb_image.h         # Single-header image loading library
 ├── examples/               # Example images for testing
@@ -65,11 +87,8 @@ c/
 ├── output/                 # Sample outputs
 │   └── example_output_test_1.png
 ├── build/                  # Build artifacts (*.o files)
-├── ascii_art               # Compiled executable
 ├── Makefile                # Build configuration
-├── README.md               # This file
-├── .gitignore              # Git ignore rules
-└── .gitattributes          # Git language recognition tools
+└── README.md               # This file
 ```
 
 ## Building
@@ -86,12 +105,6 @@ c/
 # Debug build (with debug symbols)
 make
 
-# Or explicitly
-make debug
-
-# Release build (optimized)
-make release
-
 # Clean build artifacts
 make clean
 ```
@@ -101,31 +114,38 @@ make clean
 ### Basic Usage
 
 ```bash
-# Display image with default settings (scale: 4, colored)
+# Display image auto-sized to 50% terminal width (colored)
 ./ascii_art examples/test_2.jpg
 
-# Specify custom scale factor (higher = smaller output)
-./ascii_art examples/test_2.jpg 8
+# Set exact output width in characters
+./ascii_art examples/test_2.jpg --width 60
+
+# Set downsampling factor
+./ascii_art examples/test_2.jpg --scale 8
 
 # Disable color output
-./ascii_art examples/test_2.jpg 8 --no-color
+./ascii_art examples/test_2.jpg --no-color
 
 # Save to file (automatically disables color)
-./ascii_art examples/test_2.jpg 4 output/result.txt
+./ascii_art examples/test_2.jpg -o output/result.txt
+
+# Show help
+./ascii_art -h
 ```
 
 ### Command-Line Arguments
 
 ```
-./ascii_art <image-file> [scale] [output-file] [--no-color]
+./ascii_art <image-file> [options]
 
-Arguments:
-  image-file    : Path to input image (required)
-  scale         : Downsampling factor, default: 4 (optional)
-                  Higher values = smaller output
-                  Recommended range: 2-16
-  output-file   : Save to file instead of printing (optional)
-  --no-color    : Disable ANSI color codes (optional)
+Options:
+  --width N       Set output width in characters
+  --scale N       Set downsampling factor
+  --no-color      Disable ANSI color codes
+  -o <file>       Save ASCII art to file
+  -h, --help      Show this help message
+
+Priority: --width > --scale > auto-detect (50% terminal width)
 ```
 
 ## How It Works
@@ -136,32 +156,26 @@ Arguments:
 - Converts all images to RGB (3 channels)
 - Stores pixel data in a simple `Image` structure
 
-### 2. Brightness Calculation
+### 2. Downscaling
+
+- Box-average downsampling to target dimensions via `image_downscale()`
+- Target width determined by terminal size (50%), `--width`, or `--scale`
+- Aspect ratio correction: height halved to account for terminal characters being ~2x taller than wide
+
+### 3. Brightness Calculation
 
 - Converts RGB to grayscale using the luminosity method:
   - `Gray = 0.299*R + 0.587*G + 0.114*B`
 - This weights colors based on human eye sensitivity
 
-### 3. ASCII Mapping
+### 4. ASCII Mapping
 
-- Uses a 70-character palette ordered by visual density
-- Darker characters (like `$`, `@`, `#`) for darker areas
-- Lighter characters (like `.`, `,`, ` `) for brighter areas
+- Uses a 10-character palette ordered by visual density: `@%#*+=:-. `
+- Dense characters (`@`, `%`, `#`) for darker areas
+- Sparse characters (`.`, ` `) for brighter areas
 - Maps grayscale values (0-255) to palette indices
 
-### 4. Block Averaging
-
-- Samples multiple pixels per character for better quality
-- Averages RGB values within each block
-- Reduces noise and improves visual clarity
-
-### 5. Aspect Ratio Correction
-
-- ASCII characters are ~2x taller than wide
-- Samples 2x more vertical pixels to maintain proper proportions
-- Prevents stretched/distorted output
-
-### 6. Color Output (Optional)
+### 5. Color Output (Optional)
 
 - Uses ANSI 24-bit true color escape codes
 - Format: `\033[38;2;R;G;Bm` for each character
@@ -169,14 +183,13 @@ Arguments:
 
 ## ASCII Palette
 
-The program uses this palette (70 characters, dark to light):
+The program uses this palette (10 characters, dark to light):
 
 ```
-$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,"^`'.
+@%#*+=:-. 
 ```
 
 Dense/complex characters appear darker, sparse characters appear lighter.
-Because it uses very diverse characters, the images tend to look a bit noisy.
 
 ## License
 

@@ -20,6 +20,9 @@ void image_free(Image *img);
 // Load an image from file
 Image *image_load(const char *filename);
 
+// Box-average downsample to target dimensions, returns new Image
+Image *image_downscale(const Image *img, int target_w, int target_h);
+
 // Convert RGB pixel to grayscale brightness (0-255)
 uint8_t image_rgb_to_gray(uint8_t r, uint8_t g, uint8_t b);
 
