@@ -1,0 +1,19 @@
+# Claude
+CLAUDE.md
+
+# Python
+__pycache__/
+.mypy_cache/
+*.py[cod]
+*.pyo
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
