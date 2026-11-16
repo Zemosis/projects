@@ -1,7 +1,7 @@
 CC = gcc
-CFLAGS = -std=c99 -Wall -Wextra -pedantic -O2
+CFLAGS = -std=c99 -Wall -Wextra -pedantic -O2 -Iinclude
 SRC = main.c dijkstra.c graph.c util.c
-HEADER = dijkstra.h graph.h util.h
+HEADER = include/dijkstra.h include/graph.h include/util.h
 
 all: dijkstra
 

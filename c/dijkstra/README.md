@@ -20,9 +20,9 @@ The graph file has one edge per line, `u v w` separated by white space
 ## Files
 
 - `main.c` command-line handling and driver
-- `graph.c / graph.h` reads the edge list and builds the adjacency list
-- `dijkstra.c / dijkstra.h` the algorithm and the output
-- `util.c / util.h` small helpers
+- `graph.c / include/graph.h` reads the edge list and builds the adjacency list
+- `dijkstra.c / include/dijkstra.h` the algorithm and the output
+- `util.c / include/util.h` small helpers
 - `tools/gen_graph.py` generates random test graphs
 - `tools/verify.py` checks the output against a Python heapq reference
 
