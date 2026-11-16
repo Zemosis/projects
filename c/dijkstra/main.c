@@ -1,4 +1,4 @@
-// CS 483 Project - Dijkstra's Algorithm (Milestone #2, work in progress)
+// Dijkstra's Algorithm (Milestone #2, work in progress)
 //
 // Usage: ./dijkstra <graph-file> <directed|undirected> <start-node>
 //
@@ -31,7 +31,8 @@ int main(int argc, char *argv[]) {
         directed = 0;
     } else {
         fprintf(stderr,
-                "error: graph type must be \"directed\" or \"undirected\", got \"%s\"\n",
+                "error: graph type must be \"directed\" or \"undirected\", got "
+                "\"%s\"\n",
                 argv[2]);
         usage(argv[0]);
         return EXIT_FAILURE;
@@ -40,7 +41,8 @@ int main(int argc, char *argv[]) {
     char *end;
     long startLabel = strtol(argv[3], &end, 10);
     if (end == argv[3] || *end != '\0') {
-        fprintf(stderr, "error: start node must be an integer, got \"%s\"\n", argv[3]);
+        fprintf(stderr, "error: start node must be an integer, got \"%s\"\n",
+                argv[3]);
         return EXIT_FAILURE;
     }
 
@@ -54,8 +56,8 @@ int main(int argc, char *argv[]) {
 
     int src = findNodeIndex(&g, startLabel);
     if (src < 0) {
-        fprintf(stderr, "error: start node %ld does not appear in %s\n", startLabel,
-                argv[1]);
+        fprintf(stderr, "error: start node %ld does not appear in %s\n",
+                startLabel, argv[1]);
         freeGraph(&g);
         return EXIT_FAILURE;
     }
@@ -74,8 +76,8 @@ int main(int argc, char *argv[]) {
 
     printPaths(&g, src, dist, parent);
     fflush(stdout);
-    fprintf(stderr, "dijkstra: settled %d of %d nodes in %.3f s (CPU)\n", settled,
-            g.n, (double)(t1 - t0) / CLOCKS_PER_SEC);
+    fprintf(stderr, "dijkstra: settled %d of %d nodes in %.3f s (CPU)\n",
+            settled, g.n, (double)(t1 - t0) / CLOCKS_PER_SEC);
 
     free(dist);
     free(parent);

@@ -57,8 +57,10 @@ int dijkstra(const Graph *g, int src, double dist[], int parent[]) {
     return iter;
 }
 
-// Prints every reachable node's shortest path from src, then the unreachable ones
-void printPaths(const Graph *g, int src, const double dist[], const int parent[]) {
+// Prints every reachable node's shortest path from src, then the unreachable
+// ones
+void printPaths(const Graph *g, int src, const double dist[],
+                const int parent[]) {
     int *path = safeMalloc((size_t)g->n * sizeof(int));
     int reachable = 0;
     int unreachable = 0;

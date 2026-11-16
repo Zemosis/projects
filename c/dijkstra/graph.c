@@ -30,7 +30,8 @@ int readEdgeList(const char *filename, EdgeList *el) {
     fclose(fp);
 
     if (got != EOF) {
-        fprintf(stderr, "error: %s: could not parse edge #%zu (expected \"u v w\")\n",
+        fprintf(stderr,
+                "error: %s: could not parse edge #%zu (expected \"u v w\")\n",
                 filename, el->m + 1);
         return -1;
     }
