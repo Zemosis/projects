@@ -33,7 +33,7 @@ void ascii_output_size(const Image *img, int scale_factor, int *width,
 }
 
 static void ascii_generate(const Image *img, int scale_factor, FILE *output,
-                           int use_color) {
+                           int use_color, int invert) {
     if (!img || !img->data || scale_factor < 1) {
         fprintf(stderr, "Invalid image or scale factor\n");
         return;
@@ -78,6 +78,9 @@ static void ascii_generate(const Image *img, int scale_factor, FILE *output,
 
                 // Convert to grayscale
                 uint8_t gray = image_rgb_to_gray(avg_r, avg_g, avg_b);
+                if (invert) {
+                    gray = 255 - gray;
+                }
 
                 // Map to ASCII character
                 char ascii = ascii_from_brightness(gray);
@@ -105,7 +108,8 @@ static void ascii_generate(const Image *img, int scale_factor, FILE *output,
     }
 }
 
-void ascii_print_image(const Image *img, int scale_factor, int use_color) {
+void ascii_print_image(const Image *img, int scale_factor, int use_color,
+                       int invert) {
     if (!img || !img->data || scale_factor < 1) {
         fprintf(stderr, "Invalid image or scale factor\n");
         return;
@@ -114,17 +118,18 @@ void ascii_print_image(const Image *img, int scale_factor, int use_color) {
     int scaled_width, scaled_height;
     ascii_output_size(img, scale_factor, &scaled_width, &scaled_height);
 
-    printf("\nASCII Art (%dx%d, scale: %d%s):\n", scaled_width, scaled_height,
-           scale_factor, use_color ? ", colored" : "");
+    printf("\nASCII Art (%dx%d, scale: %d%s%s):\n", scaled_width,
+           scaled_height, scale_factor, use_color ? ", colored" : "",
+           invert ? ", inverted" : "");
     printf("---\n");
 
-    ascii_generate(img, scale_factor, stdout, use_color);
+    ascii_generate(img, scale_factor, stdout, use_color, invert);
 
     printf("---\n");
 }
 
 int ascii_write_to_file(const Image *img, int scale_factor,
-                        const char *filename) {
+                        const char *filename, int invert) {
     if (!img || !img->data || scale_factor < 1 || !filename) {
         fprintf(stderr, "Invalid parameters for file output\n");
         return -1;
@@ -137,7 +142,7 @@ int ascii_write_to_file(const Image *img, int scale_factor,
         return -1;
     }
 
-    ascii_generate(img, scale_factor, file, 0);
+    ascii_generate(img, scale_factor, file, 0, invert);
 
     fclose(file);
     return 0;

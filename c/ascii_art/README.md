@@ -110,6 +110,9 @@ make clean
 # Disable color output
 ./ascii_art examples/test_2.jpg 8 --no-color
 
+# Invert brightness (looks better on dark terminal backgrounds)
+./ascii_art examples/test_2.jpg 8 --invert
+
 # Save to file (automatically disables color)
 ./ascii_art examples/test_2.jpg 4 output/result.txt
 ```
@@ -117,7 +120,7 @@ make clean
 ### Command-Line Arguments
 
 ```
-./ascii_art <image-file> [scale] [output-file] [--no-color]
+./ascii_art <image-file> [scale] [output-file] [--no-color] [--invert]
 
 Arguments:
   image-file    : Path to input image (required)
@@ -126,6 +129,8 @@ Arguments:
                   Recommended range: 2-16
   output-file   : Save to file instead of printing (optional)
   --no-color    : Disable ANSI color codes (optional)
+  --invert      : Map bright pixels to dense characters (optional)
+                  Use on dark terminal backgrounds
 ```
 
 ## How It Works

@@ -11,15 +11,21 @@ int main(int argc, char *argv[]) {
 
     // Error messege if argument is wrong
     if (argc < 2) {
-        printf("Usage: %s <image-file>\n", argv[0]);
+        printf("Usage: %s <image-file> [scale] [output-file] [--no-color] "
+               "[--invert]\n",
+               argv[0]);
         printf("  scale: downsampling factor (default: 4)\n");
         printf("  output-file: optional file to save ASCII art\n");
         printf("               if not specified, prints to console\n");
+        printf("  --no-color: disable ANSI color codes\n");
+        printf("  --invert: bright pixels get dense characters "
+               "(for dark backgrounds)\n");
         printf("\nExamples:\n");
         printf("  %s image.jpg          # Print with default scale (4)\n",
                argv[0]);
         printf("  %s image.jpg 8        # Print with scale 8\n", argv[0]);
         printf("  %s image.jpg 8 --no-color # Print without color\n", argv[0]);
+        printf("  %s image.jpg 8 --invert   # Print inverted\n", argv[0]);
         printf("  %s image.jpg 4 out.txt  # Save to file with scale 4\n",
                argv[0]);
         printf("         higher values = smaller output\n");
@@ -29,7 +35,7 @@ int main(int argc, char *argv[]) {
     // Parse optional scale factor
     int scale_factor = 4; // Default scale
     int first_flag = 2;   // Index of the first argument after the scale
-    if (argc >= 3 && strcmp(argv[2], "--no-color") != 0) {
+    if (argc >= 3 && strncmp(argv[2], "--", 2) != 0) {
         scale_factor = atoi(argv[2]);
         if (scale_factor < 1) {
             fprintf(stderr, "Error: scale must be >= 1\n");
@@ -41,10 +47,16 @@ int main(int argc, char *argv[]) {
     // Check for output file
     const char *output_file = NULL;
     int use_color = 1;
+    int invert = 0;
 
     for (int i = first_flag; i < argc; i++) {
         if (strcmp(argv[i], "--no-color") == 0) {
             use_color = 0;
+        } else if (strcmp(argv[i], "--invert") == 0) {
+            invert = 1;
+        } else if (strncmp(argv[i], "--", 2) == 0) {
+            fprintf(stderr, "Error: unknown option '%s'\n", argv[i]);
+            return 1;
         } else if (!output_file) {
             output_file = argv[i];
         }
@@ -68,7 +80,7 @@ int main(int argc, char *argv[]) {
     if (output_file) {
         // Save to file
         printf("Writing ASCII art to: %s\n", output_file);
-        if (ascii_write_to_file(img, scale_factor, output_file) == 0) {
+        if (ascii_write_to_file(img, scale_factor, output_file, invert) == 0) {
             printf("Successfully saved ASCII art to '%s'\n", output_file);
         } else {
             fprintf(stderr, "Error: Failed to write to file\n");
@@ -80,7 +92,7 @@ int main(int argc, char *argv[]) {
         if (use_color) {
             printf("Color mode: enabled (use --no-color to disable)\n");
         }
-        ascii_print_image(img, scale_factor, use_color);
+        ascii_print_image(img, scale_factor, use_color, invert);
     }
 
     image_free(img);
