@@ -12,28 +12,33 @@ A simple C program that converts images to ASCII art with optional color support
 
 ![ASCII Art Output](output/example_output_test_1.png)
 
+### ASCII Art (Colored, inverted, scale: 8)
+
+![Inverted ASCII Art Output](output/example_output_test_1_inverted.png)
+
 ### ASCII ART (Plain Text, scale: 8)
 
 ```
-fft|/r||ff111|\)?}1(1\?n;;:::,,""""",,:::;Ill!i><~
-rft)/t|\fj{()|/)?{1))fYz:,,"""""""",,::::;Il!i>><~
-rtf1/t|/fr{(||t)?1}()u*X,""^""^"""",,,::;Ill!i>><~
-jjf{\f\/rx1|||t1?1}()Jo0\~^^^"^^""",,,:;IIl!i>><<<
-frf{/jtfxr)|||t1]){Y*W*ahd/,^"""""",,,:;Il!ii><><~
-fxf1jfjrnr|((|t1](1#pZCv|vQ1^"""""",::;Il!ii>>>><~
-fnf|nfrxuj|()\/1]|{Lu|[1[+?_"""""",,:;Il!!iii>>>><
-jxt/utxrvf|()//1]|{utj-[?i~i,"""",,:;;ll!!iiiii>><
-ff(\r)rtr/)1{|({[\{cxx{?+>~~!:"",::;IIll!i!iiii>><
-rftfn\rff\({})1{}|)fXuf}--?~++l:,:;Illl!!!!iiii>><
-njrrzfvxcjt/)tt)}fj0qv}+?1}[[[]-<]>-[|tfffjjjrrrrr
-vnuvJXCCLUXzrnxuOddkkbLnrf/)1{}}})~:,^<\cccccccvcc
-LCLLLzUYXnnxx\}{rCCJzu[-ttt\(1}}}1l,"^^^iuUUUUUUJJ
-|(|||(|(|)\cf[-fzXYzvn(}frt{]-){)<I><l:::luYYYYYYY
----_+__+++tc(]1YZpQYc/{)nc)]_]f/]I!{\[<!ll+____-_[
-UUzXJXzvzuXc1-UqwhwY|Xr|xzx\}\ft+>)QJx)]+>|UXLYUrY
-0LXJCCOCQCUf[-j%dZJx[jjfUCLUuvux11ddn1-+~<~cO0ZQOm
-qpQOqwwmmOCjtxULCCmkkYXzuJQYxvux1]ahY\[-___?OdpqOq
-qppwwmwmm0LXcnrnCXdMaULJJCJz|\zx){*%wYt{][]?vZmZZm
+fft|/r||ff111|\)?}1(1\?n;;:::,,""""",,:::;Ill!i><~>
+rft)/t|\fj{()|/)?{1))fYz:,,"""""""",,::::;Il!i>><~+
+rtf1/t|/fr{(||t)?1}()u*X,""^""^"""",,,::;Ill!i>><~~
+jjf{\f\/rx1|||t1?1}()Jo0\~^^^"^^""",,,:;IIl!i>><<<~
+frf{/jtfxr)|||t1]){Y*W*ahd/,^"""""",,,:;Il!ii><><~~
+fxf1jfjrnr|((|t1](1#pZCv|vQ1^"""""",::;Il!ii>>>><~~
+fnf|nfrxuj|()\/1]|{Lu|[1[+?_"""""",,:;Il!!iii>>>><~
+jxt/utxrvf|()//1]|{utj-[?i~i,"""",,:;;ll!!iiiii>><<
+ff(\r)rtr/)1{|({[\{cxx{?+>~~!:"",::;IIll!i!iiii>><<
+rftfn\rff\({})1{}|)fXuf}--?~++l:,:;Illl!!!!iiii>><~
+njrrzfvxcjt/)tt)}fj0qv}+?1}[[[]-<]>-[|tfffjjjrrrrrx
+vnuvJXCCLUXzrnxuOddkkbLnrf/)1{}}})~:,^<\cccccccvccc
+LCLLLzUYXnnxx\}{rCCJzu[-ttt\(1}}}1l,"^^^iuUUUUUUJJJ
+|(|||(|(|)\cf[-fzXYzvn(}frt{]-){)<I><l:::luYYYYYYYY
+---_+__+++tc(]1YZpQYc/{)nc)]_]f/]I!{\[<!ll+____-_[?
+UUzXJXzvzuXc1-UqwhwY|Xr|xzx\}\ft+>)QJx)]+>|UXLYUrYU
+0LXJCCOCQCUf[-j%dZJx[jjfUCLUuvux11ddn1-+~<~cO0ZQOmZ
+qpQOqwwmmOCjtxULCCmkkYXzuJQYxvux1]ahY\[-___?OdpqOqp
+qppwwmwmm0LXcnrnCXdMaULJJCJz|\zx){*%wYt{][]?vZmZZmm
+o###okhkdLYur\/UJLLoow0JUCCJrrvu(1M%WZYt1{}[uwwwwwj
 ```
 
 ## Features
