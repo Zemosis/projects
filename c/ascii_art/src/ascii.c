@@ -23,6 +23,15 @@ char ascii_from_brightness(uint8_t brightness) {
     return ASCII_PALETTE[index];
 }
 
+void ascii_output_size(const Image *img, int scale_factor, int *width,
+                       int *height) {
+    int block_height = scale_factor * 2; // Characters are ~2x taller than wide
+
+    // Ceiling division so a partial block at the edge still gets a character
+    *width = (img->width + scale_factor - 1) / scale_factor;
+    *height = (img->height + block_height - 1) / block_height;
+}
+
 static void ascii_generate(const Image *img, int scale_factor, FILE *output,
                            int use_color) {
     if (!img || !img->data || scale_factor < 1) {
@@ -32,8 +41,8 @@ static void ascii_generate(const Image *img, int scale_factor, FILE *output,
 
     int char_aspect_ratio = 2;
 
-    int scaled_width = img->width / scale_factor;
-    int scaled_height = img->height / (scale_factor * char_aspect_ratio);
+    int scaled_width, scaled_height;
+    ascii_output_size(img, scale_factor, &scaled_width, &scaled_height);
 
     // Process image row by row
     for (int y = 0; y < scaled_height; y++) {
@@ -102,8 +111,8 @@ void ascii_print_image(const Image *img, int scale_factor, int use_color) {
         return;
     }
 
-    int scaled_width = img->width / scale_factor;
-    int scaled_height = img->height / (scale_factor * 2);
+    int scaled_width, scaled_height;
+    ascii_output_size(img, scale_factor, &scaled_width, &scaled_height);
 
     printf("\nASCII Art (%dx%d, scale: %d%s):\n", scaled_width, scaled_height,
            scale_factor, use_color ? ", colored" : "");

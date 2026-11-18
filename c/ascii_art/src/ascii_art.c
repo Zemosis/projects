@@ -28,19 +28,21 @@ int main(int argc, char *argv[]) {
 
     // Parse optional scale factor
     int scale_factor = 4; // Default scale
+    int first_flag = 2;   // Index of the first argument after the scale
     if (argc >= 3 && strcmp(argv[2], "--no-color") != 0) {
         scale_factor = atoi(argv[2]);
         if (scale_factor < 1) {
             fprintf(stderr, "Error: scale must be >= 1\n");
             return 1;
         }
+        first_flag = 3;
     }
 
     // Check for output file
     const char *output_file = NULL;
     int use_color = 1;
 
-    for (int i = 3; i < argc; i++) {
+    for (int i = first_flag; i < argc; i++) {
         if (strcmp(argv[i], "--no-color") == 0) {
             use_color = 0;
         } else if (!output_file) {
@@ -58,9 +60,10 @@ int main(int argc, char *argv[]) {
 
     printf("Successfully loaded: %dx%d (%d channels)\n", img->width,
            img->height, img->channels);
-    printf("Output size: %dx%d characters (scale: %d)\n",
-           img->width / scale_factor, img->height / (scale_factor * 2),
-           scale_factor);
+    int out_width, out_height;
+    ascii_output_size(img, scale_factor, &out_width, &out_height);
+    printf("Output size: %dx%d characters (scale: %d)\n", out_width,
+           out_height, scale_factor);
 
     if (output_file) {
         // Save to file

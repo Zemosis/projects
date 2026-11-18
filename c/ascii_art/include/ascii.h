@@ -12,6 +12,10 @@ extern const int ASCII_PALETTE_SIZE;
 // Map a grayscale value (0-255) to an ASCII character
 char ascii_from_brightness(uint8_t brightness);
 
+// Compute output size in characters, rounding up so edge pixels are kept
+void ascii_output_size(const Image *img, int scale_factor, int *width,
+                       int *height);
+
 // Convert an image to ASCII art and print to stdout
 void ascii_print_image(const Image *img, int scale_factor, int use_color);
 
