@@ -32,6 +32,19 @@ void ascii_output_size(const Image *img, int scale_factor, int *width,
     *height = (img->height + block_height - 1) / block_height;
 }
 
+int ascii_fit_scale(const Image *img, int cols, int rows) {
+    if (cols < 1 || rows < 1) {
+        return 1;
+    }
+
+    // Round up so the output from ascii_output_size never exceeds the limits
+    int scale_w = (img->width + cols - 1) / cols;
+    int scale_h = (img->height + rows * 2 - 1) / (rows * 2);
+    int scale = scale_w > scale_h ? scale_w : scale_h;
+
+    return scale < 1 ? 1 : scale;
+}
+
 static void ascii_generate(const Image *img, int scale_factor, FILE *output,
                            int use_color, int invert) {
     if (!img || !img->data || scale_factor < 1) {

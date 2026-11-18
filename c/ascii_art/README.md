@@ -101,7 +101,7 @@ make clean
 ### Basic Usage
 
 ```bash
-# Display image with default settings (scale: 4, colored)
+# Display image scaled to fit the terminal (colored)
 ./ascii_art examples/test_2.jpg
 
 # Specify custom scale factor (higher = smaller output)
@@ -124,7 +124,8 @@ make clean
 
 Arguments:
   image-file    : Path to input image (required)
-  scale         : Downsampling factor, default: 4 (optional)
+  scale         : Downsampling factor (optional)
+                  Default: fit the terminal, or 4 when saving to a file
                   Higher values = smaller output
                   Recommended range: 2-16
   output-file   : Save to file instead of printing (optional)

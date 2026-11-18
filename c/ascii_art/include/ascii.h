@@ -16,6 +16,9 @@ char ascii_from_brightness(uint8_t brightness);
 void ascii_output_size(const Image *img, int scale_factor, int *width,
                        int *height);
 
+// Smallest scale factor whose output fits in cols x rows characters
+int ascii_fit_scale(const Image *img, int cols, int rows);
+
 // Convert an image to ASCII art and print to stdout
 // invert maps bright pixels to dense characters (for dark backgrounds)
 void ascii_print_image(const Image *img, int scale_factor, int use_color,

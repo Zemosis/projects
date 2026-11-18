@@ -1,10 +1,46 @@
+#define _POSIX_C_SOURCE 200809L // For ioctl and STDOUT_FILENO under -std=c99
+
 #include "../include/ascii.h"
 #include "../include/image.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <sys/ioctl.h>
+#include <unistd.h>
+#endif
+
 #define VERSION "0.1.0"
+#define DEFAULT_SCALE 4
+
+// Lines printed around the art (info lines, header, separators, prompt)
+#define RESERVED_LINES 12
+
+// Prototype
+static int terminal_size(int *cols, int *rows);
+
+// Get the terminal size in characters, returns 0 on success
+static int terminal_size(int *cols, int *rows) {
+#ifdef _WIN32
+    CONSOLE_SCREEN_BUFFER_INFO info;
+    if (!GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &info)) {
+        return -1;
+    }
+    *cols = info.srWindow.Right - info.srWindow.Left + 1;
+    *rows = info.srWindow.Bottom - info.srWindow.Top + 1;
+#else
+    struct winsize ws;
+    if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) != 0 || ws.ws_col == 0) {
+        return -1;
+    }
+    *cols = ws.ws_col;
+    *rows = ws.ws_row;
+#endif
+    return 0;
+}
 
 int main(int argc, char *argv[]) {
     printf("ASCII Art Converter v%s\n", VERSION);
@@ -14,14 +50,14 @@ int main(int argc, char *argv[]) {
         printf("Usage: %s <image-file> [scale] [output-file] [--no-color] "
                "[--invert]\n",
                argv[0]);
-        printf("  scale: downsampling factor (default: 4)\n");
+        printf("  scale: downsampling factor (default: fit terminal, or 4)\n");
         printf("  output-file: optional file to save ASCII art\n");
         printf("               if not specified, prints to console\n");
         printf("  --no-color: disable ANSI color codes\n");
         printf("  --invert: bright pixels get dense characters "
                "(for dark backgrounds)\n");
         printf("\nExamples:\n");
-        printf("  %s image.jpg          # Print with default scale (4)\n",
+        printf("  %s image.jpg          # Print scaled to fit the terminal\n",
                argv[0]);
         printf("  %s image.jpg 8        # Print with scale 8\n", argv[0]);
         printf("  %s image.jpg 8 --no-color # Print without color\n", argv[0]);
@@ -32,16 +68,20 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    // Parse optional scale factor
-    int scale_factor = 4; // Default scale
+    // Parse optional scale factor, only if the argument is a number
+    int scale_factor = 0; // 0 means not given, picked after loading
     int first_flag = 2;   // Index of the first argument after the scale
-    if (argc >= 3 && strncmp(argv[2], "--", 2) != 0) {
-        scale_factor = atoi(argv[2]);
-        if (scale_factor < 1) {
-            fprintf(stderr, "Error: scale must be >= 1\n");
-            return 1;
+    if (argc >= 3) {
+        char *end;
+        long scale = strtol(argv[2], &end, 10);
+        if (end != argv[2] && *end == '\0') {
+            if (scale < 1 || scale > 100000) {
+                fprintf(stderr, "Error: scale must be between 1 and 100000\n");
+                return 1;
+            }
+            scale_factor = (int)scale;
+            first_flag = 3;
         }
-        first_flag = 3;
     }
 
     // Check for output file
@@ -72,6 +112,17 @@ int main(int argc, char *argv[]) {
 
     printf("Successfully loaded: %dx%d (%d channels)\n", img->width,
            img->height, img->channels);
+
+    // No scale given: fit the terminal when printing, else use the default
+    int cols, rows;
+    if (scale_factor == 0) {
+        if (!output_file && terminal_size(&cols, &rows) == 0) {
+            scale_factor = ascii_fit_scale(img, cols, rows - RESERVED_LINES);
+            printf("Fitting to terminal: %dx%d\n", cols, rows);
+        } else {
+            scale_factor = DEFAULT_SCALE;
+        }
+    }
     int out_width, out_height;
     ascii_output_size(img, scale_factor, &out_width, &out_height);
     printf("Output size: %dx%d characters (scale: %d)\n", out_width,
