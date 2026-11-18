@@ -2,6 +2,8 @@
 *.o
 ascii_art
 build/*.o
+build/*.d
+build/flags
 
 # Editor files
 .vscode/
